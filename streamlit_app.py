@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from ydata_profiling import ProfileReport
-from streamlit_pandas_profiling import st_profile_report
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Configuration de la page
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
@@ -50,11 +50,43 @@ elif page == "Analyse":
     st.subheader("📊 Analyse des Données")
     st.write("Exploration des données des prix immobiliers.")
 
-    # Rapport interactif avec pandas-profiling
-    if st.checkbox("Afficher le rapport de profilage des données"):
-        st.subheader("Rapport de Profiling des Données")
-        profile = ProfileReport(data, minimal=True)
-        st_profile_report(profile)
+    # Affichage des données brutes
+    if st.checkbox("Afficher les données brutes"):
+        st.subheader("Données des prix immobiliers")
+        st.dataframe(data)
+
+    # Statistiques descriptives
+    st.write("### Statistiques descriptives")
+    st.write(data.describe())
+
+    # Sélection de deux variables pour la visualisation
+    st.write("### Visualisation de deux variables")
+    variable_x = st.selectbox("Sélectionnez la première variable (axe X)", data.columns)
+    variable_y = st.selectbox("Sélectionnez la deuxième variable (axe Y)", data.columns)
+
+    # Génération du graphique en fonction des types des variables
+    fig, ax = plt.subplots()
+    if data[variable_x].dtype in ['int64', 'float64'] and data[variable_y].dtype in ['int64', 'float64']:
+        # Si les deux variables sont numériques, afficher un nuage de points
+        sns.scatterplot(data=data, x=variable_x, y=variable_y, ax=ax)
+        ax.set_title(f"Nuage de points entre {variable_x} et {variable_y}")
+    elif data[variable_x].dtype == 'object' and data[variable_y].dtype == 'object':
+        # Si les deux variables sont catégorielles, afficher un graphique en barres empilées
+        grouped_data = data.groupby([variable_x, variable_y]).size().unstack()
+        grouped_data.plot(kind='bar', stacked=True, ax=ax)
+        ax.set_title(f"Graphique en barres empilées de {variable_x} par {variable_y}")
+        ax.set_xlabel(variable_x)
+        ax.set_ylabel("Effectifs")
+    else:
+        # Si une variable est numérique et l'autre catégorielle, afficher un graphique de boîte
+        if data[variable_x].dtype == 'object':
+            sns.boxplot(data=data, x=variable_x, y=variable_y, ax=ax)
+            ax.set_title(f"Graphique de boîte de {variable_y} par {variable_x}")
+        else:
+            sns.boxplot(data=data, x=variable_y, y=variable_x, ax=ax)
+            ax.set_title(f"Graphique de boîte de {variable_x} par {variable_y}")
+
+    st.pyplot(fig)
 
 # Section Prédiction
 elif page == "Prédiction":
