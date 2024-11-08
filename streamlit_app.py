@@ -12,20 +12,20 @@ def load_data():
 
 data = load_data()
 
-# Navigation
+# Navigation améliorée
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Aller à", ["Accueil", "Analyse", "Prédiction", "Performance"])
+page = st.sidebar.selectbox("Choisissez une section", ["🏠 Accueil", "📊 Analyse", "🔍 Prédiction", "📈 Performance"])
 
 # Section Accueil
-if page == "Accueil":
-    st.title("Bienvenue dans l'application de gestion des prix immobiliers")
+if page == "🏠 Accueil":
+    st.title("🏠 Bienvenue dans l'application de gestion des prix immobiliers")
     st.write("Cette application permet de prédire les prix des maisons, d'analyser les données, et d'évaluer les performances des modèles de prédiction.")
 
 # Section Analyse
-elif page == "Analyse":
-    st.title("Analyse des Données")
+elif page == "📊 Analyse":
+    st.title("📊 Analyse des Données")
     st.write("Exploration des données des prix immobiliers.")
-
+    
     # Affichage des données
     if st.checkbox("Afficher les données brutes"):
         st.subheader("Données des prix immobiliers")
@@ -36,11 +36,11 @@ elif page == "Analyse":
     st.write(data.describe())
 
 # Section Prédiction
-elif page == "Prédiction":
-    st.title("Prédiction des Prix")
+elif page == "🔍 Prédiction":
+    st.title("🔍 Prédiction des Prix")
     st.write("Utilisez ce formulaire pour entrer les valeurs des caractéristiques et prédire le prix d'une maison.")
-
-    # Création d'un formulaire de saisie pour chaque variable
+    
+    # Formulaire de saisie pour chaque variable
     form_data = {}
     for col in data.columns:
         if data[col].dtype == 'object':
@@ -61,10 +61,10 @@ elif page == "Prédiction":
         # st.write(f"Le prix prédit est : {predicted_price}")
 
 # Section Performance
-elif page == "Performance":
-    st.title("Évaluation des Performances du Modèle")
+elif page == "📈 Performance":
+    st.title("📈 Évaluation des Performances du Modèle")
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
-
+    # Ajoutez ici le code pour afficher les métriques de performance du modèle
 
 # ---------------------------------------------------
 #import joblib
