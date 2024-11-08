@@ -12,3 +12,5 @@ def load_data():
     return data
 
 data = load_data()
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Aller à", ["Accueil", "Analyse", "Prédiction", "Performance"])
