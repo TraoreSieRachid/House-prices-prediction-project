@@ -7,7 +7,7 @@ st.set_page_config(page_title="Application de gestion des prix immobiliers", lay
 # Chargement des données
 @st.cache_data
 def load_data():
-    data = pd.read_csv("data/train_cleaned")  # Remplacez par le chemin réel de votre fichier
+    data = pd.read_csv("data/train_cleaned.csv")  # Remplacez par le chemin réel de votre fichier
     return data
 
 data = load_data()
