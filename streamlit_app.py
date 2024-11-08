@@ -64,3 +64,22 @@ elif page == "Prédiction":
 elif page == "Performance":
     st.title("Évaluation des Performances du Modèle")
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
+
+
+# ---------------------------------------------------
+#import joblib
+
+# Charger le modèle
+#@st.cache_data
+#def load_model():
+ #   model = joblib.load("path_to_your_model/model.pkl")  # Remplacez par le chemin réel de votre modèle
+  #  return model
+
+#model = load_model()
+
+# Prédire
+#if st.button("Prédire le Prix"):
+ #   # Convertir le dictionnaire form_data en DataFrame pour l'utiliser avec le modèle
+  #  form_df = pd.DataFrame([form_data])
+   # predicted_price = model.predict(form_df)[0]
+   # st.write(f"Le prix prédit est : {predicted_price}")
