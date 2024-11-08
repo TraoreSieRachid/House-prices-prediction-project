@@ -1,55 +1,16 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-from sklearn.linear_model import LinearRegression, Ridge, Lasso
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-import matplotlib.pyplot as plt
 
 # Configuration de la page
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
-# Chargement et préparation des données
+# Chargement des données
 @st.cache_data
 def load_data():
     data = pd.read_csv("data/train_cleaned.csv")  # Remplacez par le chemin réel de votre fichier
     return data
 
-# Encodage des variables qualitatives
-@st.cache_data
-def preprocess_data(data):
-    data_encoded = pd.get_dummies(data, drop_first=True)  # Applique l'encodage one-hot
-    return data_encoded
-
 data = load_data()
-data_encoded = preprocess_data(data)
-
-# Préparation des modèles de régression
-@st.cache_resource
-def train_models(data_encoded):
-    # Préparation des données pour l'entraînement
-    X = data_encoded.drop(columns=['SalePrice'])  # Remplacer 'SalePrice' par la colonne cible
-    y = data_encoded['SalePrice']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    models = {
-        "Régression Linéaire": LinearRegression(),
-        "Régression Ridge": Ridge(),
-        "Régression Lasso": Lasso()
-    }
-
-    trained_models = {}
-    performances = {}
-    for name, model in models.items():
-        model.fit(X_train, y_train)
-        predictions = model.predict(X_test)
-        mae = mean_absolute_error(y_test, predictions)
-        trained_models[name] = model
-        performances[name] = mae  # Enregistrer le MAE pour chaque modèle
-
-    return trained_models, performances
-
-trained_models, performances = train_models(data_encoded)
 
 # Navigation
 st.sidebar.title("Navigation")
@@ -65,59 +26,41 @@ elif page == "Analyse":
     st.title("Analyse des Données")
     st.write("Exploration des données des prix immobiliers.")
 
+    # Affichage des données
     if st.checkbox("Afficher les données brutes"):
         st.subheader("Données des prix immobiliers")
         st.dataframe(data)
 
+    # Statistiques descriptives
     st.write("### Statistiques descriptives")
     st.write(data.describe())
 
 # Section Prédiction
 elif page == "Prédiction":
     st.title("Prédiction des Prix")
-    st.write("Sélectionnez un modèle et entrez les valeurs des caractéristiques pour prédire le prix d'une maison.")
-
-    # Sélection du modèle
-    model_choice = st.selectbox("Choisissez un modèle de régression", ["Régression Linéaire", "Régression Ridge", "Régression Lasso"])
+    st.write("Utilisez ce formulaire pour entrer les valeurs des caractéristiques et prédire le prix d'une maison.")
 
     # Création d'un formulaire de saisie pour chaque variable
     form_data = {}
     for col in data.columns:
         if data[col].dtype == 'object':
+            # Champ de saisie de texte pour les variables catégorielles
             form_data[col] = st.selectbox(f"{col}", data[col].unique())
         elif data[col].dtype in ['int64', 'float64']:
+            # Champ de saisie numérique pour les variables numériques
             min_val = data[col].min()
             max_val = data[col].max()
             form_data[col] = st.number_input(f"{col}", min_value=float(min_val), max_value=float(max_val), value=float(min_val))
     
-    # Bouton pour effectuer la prédiction
+    # Bouton pour prédire
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
         st.write(form_data)
-
-        # Transformation des variables qualitatives en variables binaires
-        input_df = pd.DataFrame([form_data])
-        input_encoded = pd.get_dummies(input_df)
-        
-        # Ajuster les colonnes manquantes (si des colonnes d'encodage sont absentes dans input_encoded)
-        input_encoded = input_encoded.reindex(columns=X.columns, fill_value=0)
-
-        # Prédiction
-        model = trained_models[model_choice]
-        predicted_price = model.predict(input_encoded)
-        st.write(f"Le prix prédit est : {predicted_price[0]:,.2f} €")
+        # Code pour la prédiction (exemple)
+        # predicted_price = model.predict(pd.DataFrame([form_data]))
+        # st.write(f"Le prix prédit est : {predicted_price}")
 
 # Section Performance
 elif page == "Performance":
     st.title("Évaluation des Performances du Modèle")
-    st.write("Visualisez les performances des modèles de régression avec le MAE (Mean Absolute Error) comme métrique.")
-
-    # Afficher l'histogramme des performances
-    fig, ax = plt.subplots()
-    ax.bar(performances.keys(), performances.values(), color=['blue', 'green', 'orange'])
-    ax.set_xlabel("Modèles")
-    ax.set_ylabel("MAE (Mean Absolute Error)")
-    ax.set_title("Performance des modèles de régression")
-    
-    # Afficher la figure avec Streamlit
-    st.pyplot(fig)
+    st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
