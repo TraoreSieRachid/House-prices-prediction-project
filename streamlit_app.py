@@ -14,39 +14,40 @@ def load_data():
 
 data = load_data()
 
+# Initialisation de l'état de la page
+if "page" not in st.session_state:
+    st.session_state.page = "Accueil"
+
 # Barre de navigation horizontale
 st.title("Application de gestion des prix immobiliers")
 
 # Créer des colonnes pour placer les boutons de navigation horizontalement
 col1, col2, col3, col4 = st.columns(4)
 
-with col1:
-    accueil = st.button("🏠 Accueil")
-with col2:
-    analyse = st.button("📊 Analyse")
-with col3:
-    prediction = st.button("🔍 Prédiction")
-with col4:
-    performance = st.button("📈 Performance")
+# Fonctions pour changer la page active dans st.session_state
+def set_page(page_name):
+    st.session_state.page = page_name
 
-# Déterminer la page active en fonction du bouton cliqué
-page = "Accueil"  # Page par défaut
-if accueil:
-    page = "Accueil"
-elif analyse:
-    page = "Analyse"
-elif prediction:
-    page = "Prédiction"
-elif performance:
-    page = "Performance"
+with col1:
+    if st.button("🏠 Accueil"):
+        set_page("Accueil")
+with col2:
+    if st.button("📊 Analyse"):
+        set_page("Analyse")
+with col3:
+    if st.button("🔍 Prédiction"):
+        set_page("Prédiction")
+with col4:
+    if st.button("📈 Performance"):
+        set_page("Performance")
 
 # Section Accueil
-if page == "Accueil":
+if st.session_state.page == "Accueil":
     st.subheader("🏠 Bienvenue dans l'application de gestion des prix immobiliers")
     st.write("Cette application permet de prédire les prix des maisons, d'analyser les données, et d'évaluer les performances des modèles de prédiction.")
 
 # Section Analyse
-elif page == "Analyse":
+elif st.session_state.page == "Analyse":
     st.subheader("📊 Analyse des Données")
     st.write("Exploration des données des prix immobiliers.")
 
@@ -89,7 +90,7 @@ elif page == "Analyse":
     st.pyplot(fig)
 
 # Section Prédiction
-elif page == "Prédiction":
+elif st.session_state.page == "Prédiction":
     st.subheader("🔍 Prédiction des Prix")
     st.write("Utilisez ce formulaire pour entrer les valeurs des caractéristiques et prédire le prix d'une maison.")
     
@@ -114,7 +115,7 @@ elif page == "Prédiction":
         # st.write(f"Le prix prédit est : {predicted_price}")
 
 # Section Performance
-elif page == "Performance":
+elif st.session_state.page == "Performance":
     st.subheader("📈 Évaluation des Performances du Modèle")
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
     # Ajoutez ici le code pour afficher les métriques de performance du modèle
