@@ -10,3 +10,8 @@ def load_data():
     # Remplacez 'house_prices.csv' par le chemin de votre fichier de données
     data = pd.read_csv("house_prices.csv")
     return data
+
+data = load_data()
+
+# Navigation
+st.sidebar.title("Navigation")
