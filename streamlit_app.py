@@ -5,10 +5,9 @@ import pandas as pd
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
 # Chargement des données
-@st.cache_data  # Met en cache les données pour éviter un rechargement à chaque changement de page
+@st.cache_data
 def load_data():
-    # Remplacez 'house_prices.csv' par le chemin de votre fichier de données
-    data = pd.read_csv("data/train_cleaned.csv")
+    data = pd.read_csv("data/train_cleaned")  # Remplacez par le chemin réel de votre fichier
     return data
 
 data = load_data()
@@ -30,16 +29,36 @@ elif page == "Analyse":
     # Affichage des données
     if st.checkbox("Afficher les données brutes"):
         st.subheader("Données des prix immobiliers")
-        st.dataframe(data)  # Affiche le dataframe
+        st.dataframe(data)
 
     # Statistiques descriptives
     st.write("### Statistiques descriptives")
-    st.write(data.describe())  # Affiche un résumé statistique des données
+    st.write(data.describe())
 
 # Section Prédiction
 elif page == "Prédiction":
     st.title("Prédiction des Prix")
-    st.write("Utilisez cette section pour prédire les prix des maisons en fonction des caractéristiques.")
+    st.write("Utilisez ce formulaire pour entrer les valeurs des caractéristiques et prédire le prix d'une maison.")
+
+    # Création d'un formulaire de saisie pour chaque variable
+    form_data = {}
+    for col in data.columns:
+        if data[col].dtype == 'object':
+            # Champ de saisie de texte pour les variables catégorielles
+            form_data[col] = st.selectbox(f"{col}", data[col].unique())
+        elif data[col].dtype in ['int64', 'float64']:
+            # Champ de saisie numérique pour les variables numériques
+            min_val = data[col].min()
+            max_val = data[col].max()
+            form_data[col] = st.number_input(f"{col}", min_value=float(min_val), max_value=float(max_val), value=float(min_val))
+    
+    # Bouton pour prédire
+    if st.button("Prédire le Prix"):
+        st.write("Lancer la prédiction avec les valeurs suivantes :")
+        st.write(form_data)
+        # Code pour la prédiction (exemple)
+        # predicted_price = model.predict(pd.DataFrame([form_data]))
+        # st.write(f"Le prix prédit est : {predicted_price}")
 
 # Section Performance
 elif page == "Performance":
