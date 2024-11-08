@@ -9,20 +9,27 @@ import matplotlib.pyplot as plt
 # Configuration de la page
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
-# Chargement des données
+# Chargement et préparation des données
 @st.cache_data
 def load_data():
     data = pd.read_csv("data/train_cleaned.csv")  # Remplacez par le chemin réel de votre fichier
     return data
 
+# Encodage des variables qualitatives
+@st.cache_data
+def preprocess_data(data):
+    data_encoded = pd.get_dummies(data, drop_first=True)  # Applique l'encodage one-hot
+    return data_encoded
+
 data = load_data()
+data_encoded = preprocess_data(data)
 
 # Préparation des modèles de régression
 @st.cache_resource
-def train_models(data):
+def train_models(data_encoded):
     # Préparation des données pour l'entraînement
-    X = data.drop(columns=['SalePrice'])  # Remplacer 'SalePrice' par la colonne cible dans votre dataset
-    y = data['SalePrice']
+    X = data_encoded.drop(columns=['SalePrice'])  # Remplacer 'SalePrice' par la colonne cible
+    y = data_encoded['SalePrice']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     models = {
@@ -42,7 +49,7 @@ def train_models(data):
 
     return trained_models, performances
 
-trained_models, performances = train_models(data)
+trained_models, performances = train_models(data_encoded)
 
 # Navigation
 st.sidebar.title("Navigation")
@@ -87,13 +94,17 @@ elif page == "Prédiction":
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
         st.write(form_data)
-        
-        # Convertir les valeurs de `form_data` en DataFrame pour la prédiction
+
+        # Transformation des variables qualitatives en variables binaires
         input_df = pd.DataFrame([form_data])
+        input_encoded = pd.get_dummies(input_df)
+        
+        # Ajuster les colonnes manquantes (si des colonnes d'encodage sont absentes dans input_encoded)
+        input_encoded = input_encoded.reindex(columns=X.columns, fill_value=0)
 
         # Prédiction
         model = trained_models[model_choice]
-        predicted_price = model.predict(input_df)
+        predicted_price = model.predict(input_encoded)
         st.write(f"Le prix prédit est : {predicted_price[0]:,.2f} €")
 
 # Section Performance
