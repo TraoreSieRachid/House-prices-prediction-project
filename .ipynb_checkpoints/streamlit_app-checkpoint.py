@@ -52,7 +52,6 @@ if st.session_state.page == "Accueil":
     st.write("Cette application permet de prédire les prix des maisons, d'analyser les données, et d'évaluer les performances des modèles de prédiction.")
 
 # Section Analyse
-# Section Analyse
 elif st.session_state.page == "Analyse":
     st.subheader("📊 Analyse des Données")
     st.write("Exploration des données des prix immobiliers.")
@@ -97,7 +96,7 @@ elif st.session_state.page == "Analyse":
 
     # Ajout de la matrice de corrélation
     st.write("### Matrice de Corrélation")
-    correlation_matrix = data.corr()  # Calcul de la matrice de corrélation
+    correlation_matrix = data.select_dtypes(include=['int64', 'float64']).corr()  # Calcul de la matrice de corrélation
     fig_corr, ax_corr = plt.subplots(figsize=(10, 8))  # Taille de la figure
     sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax_corr, cbar=True)
     ax_corr.set_title("Matrice de Corrélation")
