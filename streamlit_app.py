@@ -4,14 +4,13 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
 #from sklearn.metrics import mean_absolute_error, mean_squared_error
+# Configuration de la page
+st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
 @st.cache_resource
 def load_ridge_model():
     return joblib.load('code/ridge_model.pkl')  # Chemin vers votre fichier modèle Ridge
 ridge_model= load_ridge_model()
-
-# Configuration de la page
-st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
 # Chargement des données
 @st.cache_data
