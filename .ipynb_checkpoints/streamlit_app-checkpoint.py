@@ -52,7 +52,7 @@ if st.session_state.page == "Accueil":
     st.subheader("🏠 Bienvenue dans l'application de gestion des prix immobiliers")
     st.write("Cette application permet de prédire les prix des maisons, d'analyser les données, et d'évaluer les performances des modèles de prédiction.")
 
-# Génération du graphique en fonction des types des variables
+    # Génération du graphique en fonction des types des variables
     fig, ax = plt.subplots(figsize=(10, 8))  # Taille adaptée
     if data[variable_x].dtype in ['int64', 'float64'] and data[variable_y].dtype in ['int64', 'float64']:
         # Nuage de points avec style amélioré
