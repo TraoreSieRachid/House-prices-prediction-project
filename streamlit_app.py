@@ -112,13 +112,13 @@ elif st.session_state.page == "Prédiction":
             max_val = data[col].max()
             form_data[col] = st.number_input(f"{col}", min_value=float(min_val), max_value=float(max_val), value=float(min_val))
     
-    # Bouton pour prédire
-    #if st.button("Prédire le Prix"):
-     #   st.write("Lancer la prédiction avec les valeurs suivantes :")
-       # st.write(form_data)
-       # input_data = pd.DataFrame([form_data])  # Convertir les entrées en DataFrame
-       # predicted_price = ridge_model.predict(input_data)
-      #  st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
+    #Bouton pour prédire
+    if st.button("Prédire le Prix"):
+        st.write("Lancer la prédiction avec les valeurs suivantes :")
+        st.write(form_data)
+        input_data = pd.DataFrame([form_data])  # Convertir les entrées en DataFrame
+        predicted_price = ridge_model.predict(input_data)
+        st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
 
 
 # Section Performance
