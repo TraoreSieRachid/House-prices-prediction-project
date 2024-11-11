@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 # Configuration de la page Streamlit
 st.set_page_config(page_title="Prédiction des prix immobiliers", layout="wide")
@@ -15,7 +16,7 @@ def load_ridge_model():
 
 ridge_model = load_ridge_model()
 
-pipeline = joblib.load('pipeline.pkl')
+pipeline = joblib.load('code/pipeline.pkl')
 
 # Fonction pour charger les données (mise en cache)
 @st.cache_data
@@ -139,7 +140,7 @@ elif st.session_state.page == "Prédiction":
 
         # Prédiction
         try:
-            input_data = pipeline.fit_transform(input_data)
+            input_data = pipeline.transform(input_data)
             predicted_price = ridge_model.predict(input_data)
             st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
         except Exception as e:
@@ -155,29 +156,4 @@ elif st.session_state.page == "Performance":
     y_test = data["price"]  # Assurez-vous que "price" est la colonne cible
     y_pred = ridge_model.predict(X_test)
 
-    # Calcul des métriques de performance
-    mae = mean_absolute_error(y_test, y_pred)
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-
-    # Affichage des résultats
-    st.write(f"Erreur Absolue Moyenne (MAE) : {mae:,.2f}")
-    st.write(f"Erreur Quadratique Moyenne (MSE) : {mse:,.2f}")
-    st.write(f"Racine de l'Erreur Quadratique Moyenne (RMSE) : {rmse:,.2f}")
-
-    # Visualisation : Comparaison entre les prix réels et prédits
-    st.subheader("Comparaison des Prix Réels vs Prédits")
-    comparison_df = pd.DataFrame({
-        "Prix Réel": y_test,
-        "Prix Prédit": y_pred
-    })
-    
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(data=comparison_df, x="Prix Réel", y="Prix Prédit", ax=ax, color="blue", s=100, edgecolor='black')
-    ax.plot([comparison_df["Prix Réel"].min(), comparison_df["Prix Réel"].max()], 
-            [comparison_df["Prix Réel"].min(), comparison_df["Prix Réel"].max()], 
-            color='red', linestyle='--')  # Ligne d'égalité
-    ax.set_title("Comparaison des Prix Réels vs Prédits", fontsize=16, fontweight='bold')
-    ax.set_xlabel("Prix Réel", fontsize=14)
-    ax.set_ylabel("Prix Prédit", fontsize=14)
-    st.pyplot(fig)
+    #
