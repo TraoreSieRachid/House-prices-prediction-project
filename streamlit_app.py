@@ -115,34 +115,66 @@ elif st.session_state.page == "Analyse":
 # Section Prédiction des prix
 elif st.session_state.page == "Prédiction":
     st.subheader("🔍 Prédiction des Prix")
-    st.write("Entrez les caractéristiques de la maison pour prédire son prix.")
-    
-    # Formulaire pour saisir les caractéristiques
+    st.write("Utilisez ce formulaire pour entrer les valeurs des caractéristiques et prédire le prix d'une maison.")
+
+    # Formulaire de saisie
     form_data = {}
     for col in data.columns:
         if data[col].dtype == 'object':
+            # Champ de saisie de texte pour les variables catégorielles
             form_data[col] = st.selectbox(f"{col}", data[col].unique())
         elif data[col].dtype in ['int64', 'float64']:
+            # Champ de saisie numérique pour les variables numériques
             min_val = data[col].min()
             max_val = data[col].max()
             form_data[col] = st.number_input(f"{col}", min_value=float(min_val), max_value=float(max_val), value=float(min_val))
-    
-    # Prédiction du prix lorsque le bouton est cliqué
-    if st.button("Prédire le Prix"):
-        input_data = pd.DataFrame([form_data])
-        st.write("Données d'entrée pour la prédiction :", input_data)
-        predicted_price = ridge_model.predict(input_data)
-        st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
 
-# Section Performance des modèles
+    # Bouton pour lancer la prédiction
+    if st.button("Prédire le Prix"):
+        st.write("Lancer la prédiction avec les valeurs suivantes :")
+        input_data = pd.DataFrame([form_data])
+        st.write("Vérification des données d'entrée avant prédiction :", input_data)
+
+        # Prédiction
+        try:
+            predicted_price = ridge_model.predict(input_data)
+            st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
+        except Exception as e:
+            st.error(f"Erreur lors de la prédiction : {e}")
+
+# Section Performance
 elif st.session_state.page == "Performance":
     st.subheader("📈 Évaluation des Performances du Modèle")
-    st.write("""
-        Cette section permet d'examiner les performances du modèle de prédiction des prix immobiliers.
-    """)
-    # Vous pouvez ajouter ici des métriques de performance comme MAE, MSE, RMSE (à calculer sur un jeu de test)
-    # Exemple :
-    # y_pred = ridge_model.predict(X_test)
-    # st.write("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred))
-    # st.write("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred))
-    # st.write("Root Mean Squared Error (RMSE):", mean_squared_error(y_test, y_pred, squared=False))
+    st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
+
+    # Calcul de la performance sur un jeu de test
+    X_test = data.drop(columns=["price"])  # Remplacer "price" par la colonne cible
+    y_test = data["price"]  # Assurez-vous que "price" est la colonne cible
+    y_pred = ridge_model.predict(X_test)
+
+    # Calcul des métriques de performance
+    mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+
+    # Affichage des résultats
+    st.write(f"Erreur Absolue Moyenne (MAE) : {mae:,.2f}")
+    st.write(f"Erreur Quadratique Moyenne (MSE) : {mse:,.2f}")
+    st.write(f"Racine de l'Erreur Quadratique Moyenne (RMSE) : {rmse:,.2f}")
+
+    # Visualisation : Comparaison entre les prix réels et prédits
+    st.subheader("Comparaison des Prix Réels vs Prédits")
+    comparison_df = pd.DataFrame({
+        "Prix Réel": y_test,
+        "Prix Prédit": y_pred
+    })
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(data=comparison_df, x="Prix Réel", y="Prix Prédit", ax=ax, color="blue", s=100, edgecolor='black')
+    ax.plot([comparison_df["Prix Réel"].min(), comparison_df["Prix Réel"].max()], 
+            [comparison_df["Prix Réel"].min(), comparison_df["Prix Réel"].max()], 
+            color='red', linestyle='--')  # Ligne d'égalité
+    ax.set_title("Comparaison des Prix Réels vs Prédits", fontsize=16, fontweight='bold')
+    ax.set_xlabel("Prix Réel", fontsize=14)
+    ax.set_ylabel("Prix Prédit", fontsize=14)
+    st.pyplot(fig)
