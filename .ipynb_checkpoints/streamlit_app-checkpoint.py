@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
+import house_price_modèles
 #from sklearn.metrics import mean_absolute_error, mean_squared_error
 # Configuration de la page
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
