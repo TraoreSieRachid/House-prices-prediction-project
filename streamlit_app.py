@@ -153,7 +153,14 @@ elif st.session_state.page == "Performance":
 
     # Calcul de la performance sur un jeu de test
     X_test = data.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
-    y_test = data["price"]  # Assurez-vous que "price" est la colonne cible
+    y_test = data["SalePrice"]  # Assurez-vous que "price" est la colonne cible
     y_pred = ridge_model.predict(X_test)
 
-    #
+    # Affichage des métriques de performance
+    mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+
+    st.write(f"Erreur Absolue Moyenne (MAE) : {mae:,.2f}")
+    st.write(f"Erreur Quadratique Moyenne (MSE) : {mse:,.2f}")
+    st.write(f"Racine de l'Erreur Quadratique Moyenne (RMSE) : {rmse:,.2f}")
