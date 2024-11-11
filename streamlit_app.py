@@ -24,7 +24,7 @@ def load_data():
     return pd.read_csv("data/train_df.csv")  # Remplacez par le chemin réel de vos données
 
 data = load_data()
-data_test=pd.read_csv("data/test_df.csv")
+
 # Initialisation de l'état de la page (si ce n'est pas déjà fait)
 if "page" not in st.session_state:
     st.session_state.page = "Accueil"
@@ -152,15 +152,8 @@ elif st.session_state.page == "Performance":
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
 
     # Calcul de la performance sur un jeu de test
-    X_test = data_test.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
-    y_test = data_test["price"]  # Assurez-vous que "price" est la colonne cible
+    X_test = data.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
+    y_test = data["price"]  # Assurez-vous que "price" est la colonne cible
     y_pred = ridge_model.predict(X_test)
 
-    # Affichage des métriques de performance
-    mae = mean_absolute_error(y_test, y_pred)
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-
-    st.write(f"Erreur Absolue Moyenne (MAE) : {mae:,.2f}")
-    st.write(f"Erreur Quadratique Moyenne (MSE) : {mse:,.2f}")
-    st.write(f"Racine de l'Erreur Quadratique Moyenne (RMSE) : {rmse:,.2f}")
+    #
