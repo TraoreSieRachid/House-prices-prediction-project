@@ -25,7 +25,7 @@ if "page" not in st.session_state:
     st.session_state.page = "Accueil"
 
 # Barre de navigation horizontale
-st.title("Application de gestion des prix immobiliers")
+st.title("Application de prédiction des prix immobiliers")
 
 # Créer des colonnes pour placer les boutons de navigation horizontalement
 col1, col2, col3, col4 = st.columns(4)
@@ -49,7 +49,7 @@ with col4:
 
 # Section Accueil
 if st.session_state.page == "Accueil":
-    st.subheader("🏠 Bienvenue dans l'application de gestion des prix immobiliers")
+    st.subheader("🏠 Bienvenue dans l'application de prédiction des prix immobiliers")
     st.write("Cette application permet de prédire les prix des maisons, d'analyser les données, et d'évaluer les performances des modèles de prédiction.")
 
 # Section Analyse
