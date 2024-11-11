@@ -15,6 +15,8 @@ def load_ridge_model():
 
 ridge_model = load_ridge_model()
 
+pipeline = joblib.load('pipeline.pkl')
+
 # Fonction pour charger les données (mise en cache)
 @st.cache_data
 def load_data():
@@ -137,6 +139,7 @@ elif st.session_state.page == "Prédiction":
 
         # Prédiction
         try:
+            input_data = pipeline.fit_transform(input_data)
             predicted_price = ridge_model.predict(input_data)
             st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
         except Exception as e:
