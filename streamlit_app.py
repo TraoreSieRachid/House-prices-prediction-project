@@ -118,7 +118,7 @@ elif st.session_state.page == "Prédiction":
         input_data = pd.DataFrame([form_data])
         # Préparation des données d'entrée pour la prédiction
         st.write("Vérification des données d'entrée avant prédiction :", input_data)
-        predicted_price = ridge_model.predict(input_data_np)  # Utiliser input_data_np pour la prédiction
+        predicted_price = ridge_model.predict(input_data[0])  # Utiliser input_data_np pour la prédiction
         st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
 
 
