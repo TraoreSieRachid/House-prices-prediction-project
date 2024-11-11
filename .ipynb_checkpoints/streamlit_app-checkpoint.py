@@ -3,9 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
-import house_price_modèles
-#from sklearn.metrics import mean_absolute_error, mean_squared_error
-# Configuration de la page
+
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
 
 @st.cache_resource
@@ -120,7 +118,7 @@ elif st.session_state.page == "Prédiction":
         # Préparation des données d'entrée pour la prédiction
         st.write("Vérification des données d'entrée avant prédiction :", input_data)
         input_data_np = pipeline.fit_transform(input_data)
-        predicted_price = ridge_model.predict(input_data_np)  # Utiliser input_data_np pour la prédiction
+        predicted_price = ridge_model.predict(input_data)  # Utiliser input_data_np pour la prédiction
         st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
 
 
