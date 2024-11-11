@@ -97,8 +97,8 @@ elif st.session_state.page == "Analyse":
     # Ajout de la matrice de corrélation
     st.write("### Matrice de Corrélation")
     correlation_matrix = data.select_dtypes(include=['int64', 'float64']).corr()  # Calcul de la matrice de corrélation
-    fig_corr, ax_corr = plt.subplots(figsize=(10, 8))  # Taille de la figure
-    sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax_corr, cbar=True)
+    fig_corr, ax_corr = plt.subplots(figsize=(14, 12))  # Taille de la figure
+    sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".1f", ax=ax_corr, cbar=True)
     ax_corr.set_title("Matrice de Corrélation")
     st.pyplot(fig_corr)
 # Section Prédiction
