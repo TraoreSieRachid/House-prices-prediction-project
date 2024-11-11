@@ -152,8 +152,10 @@ elif st.session_state.page == "Performance":
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
 
     # Calcul de la performance sur un jeu de test
-    X_test = data.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
-    y_test = data["SalePrice"]  # Assurez-vous que "price" est la colonne cible
+    data2 = pipeline.transform(data)
+    X_test = data2.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
+    y_test = data2["SalePrice"]  # Assurez-vous que "price" est la colonne cible
+
     y_pred = ridge_model.predict(X_test)
 
     # Affichage des métriques de performance
