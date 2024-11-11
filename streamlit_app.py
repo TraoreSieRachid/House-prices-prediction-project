@@ -115,10 +115,9 @@ elif st.session_state.page == "Prédiction":
     #Bouton pour prédire
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
-        st.write(form_data)
         input_data = pd.DataFrame([form_data])
         # Si le modèle s'attend à un tableau NumPy, convertissez input_data
-        input_data_np = input_data.values  # Convertir en tableau NumPy si nécessaire
+        input_data_np = form_data.values  # Convertir en tableau NumPy si nécessaire
         # Préparation des données d'entrée pour la prédiction
         st.write("Vérification des données d'entrée avant prédiction :", input_data)
         predicted_price = ridge_model.predict(input_data_np)  # Utiliser input_data_np pour la prédiction
