@@ -71,30 +71,36 @@ elif st.session_state.page == "Analyse":
     variable_x = st.selectbox("Sélectionnez la première variable (axe X)", data.columns)
     variable_y = st.selectbox("Sélectionnez la deuxième variable (axe Y)", data.columns)
 
-    # Génération du graphique en fonction des types des variables
-    fig, ax = plt.subplots()
+# Génération du graphique en fonction des types des variables
+    fig, ax = plt.subplots(figsize=(10, 8))  # Taille adaptée
     if data[variable_x].dtype in ['int64', 'float64'] and data[variable_y].dtype in ['int64', 'float64']:
-        # Si les deux variables sont numériques, afficher un nuage de points
-        sns.scatterplot(data=data, x=variable_x, y=variable_y, ax=ax)
-        ax.set_title(f"Nuage de points entre {variable_x} et {variable_y}")
+        # Nuage de points avec style amélioré
+        sns.scatterplot(data=data, x=variable_x, y=variable_y, ax=ax, color="teal", s=100, edgecolor='black')
+        ax.set_title(f"Nuage de points entre {variable_x} et {variable_y}", fontsize=16, fontweight='bold')
+        ax.set_xlabel(variable_x, fontsize=14)
+        ax.set_ylabel(variable_y, fontsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        ax.grid(True, linestyle='--', alpha=0.7)
+
     elif data[variable_x].dtype == 'object' and data[variable_y].dtype == 'object':
-        # Si les deux variables sont catégorielles, afficher un graphique en barres empilées
+        # Graphique en barres empilées avec style
         grouped_data = data.groupby([variable_x, variable_y]).size().unstack()
-        grouped_data.plot(kind='bar', stacked=True, ax=ax)
-        ax.set_title(f"Graphique en barres empilées de {variable_x} par {variable_y}")
-        ax.set_xlabel(variable_x)
-        ax.set_ylabel("Effectifs")
+        grouped_data.plot(kind='bar', stacked=True, ax=ax, cmap='coolwarm')
+        ax.set_title(f"Graphique en barres empilées de {variable_x} par {variable_y}", fontsize=16, fontweight='bold')
+        ax.set_xlabel(variable_x, fontsize=14)
+        ax.set_ylabel("Effectifs", fontsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        ax.legend(title=variable_y, fontsize=12)
+
     else:
-        # Si une variable est numérique et l'autre catégorielle, afficher un graphique de boîte
-        if data[variable_x].dtype == 'object':
-            sns.boxplot(data=data, x=variable_x, y=variable_y, ax=ax)
-            ax.set_title(f"Graphique de boîte de {variable_y} par {variable_x}")
-        else:
-            sns.boxplot(data=data, x=variable_y, y=variable_x, ax=ax)
-            ax.set_title(f"Graphique de boîte de {variable_x} par {variable_y}")
+        # Graphique de boîte avec couleurs harmonieuses
+        sns.boxplot(data=data, x=variable_x, y=variable_y, ax=ax, palette="Set2")
+        ax.set_title(f"Graphique de boîte de {variable_y} par {variable_x}", fontsize=16, fontweight='bold')
+        ax.set_xlabel(variable_x, fontsize=14)
+        ax.set_ylabel(variable_y, fontsize=14)
+        ax.tick_params(axis='both', which='major', labelsize=12)
 
     st.pyplot(fig)
-
     # Ajout de la matrice de corrélation
     st.write("### Matrice de Corrélation")
     correlation_matrix = data.select_dtypes(include=['int64', 'float64']).corr()  # Calcul de la matrice de corrélation
