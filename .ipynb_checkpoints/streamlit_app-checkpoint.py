@@ -152,7 +152,8 @@ elif st.session_state.page == "Performance":
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
 
     # Calcul de la performance sur un jeu de test
-    data2 = pipeline.transform(data)
+    data2=data
+    data2 = pipeline.transform(data2)
     X_test = data2.drop(columns=["SalePrice"])  # Remplacer "price" par la colonne cible
     y_test = data2["SalePrice"]  # Assurez-vous que "price" est la colonne cible
 
