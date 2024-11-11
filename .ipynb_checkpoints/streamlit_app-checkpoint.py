@@ -5,7 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
 
-st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
+st.set_page_config(page_title="Application de prédiction des prix immobiliers", layout="wide")
 
 @st.cache_resource
 def load_ridge_model():
