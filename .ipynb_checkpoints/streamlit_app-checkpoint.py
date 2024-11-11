@@ -116,8 +116,12 @@ elif st.session_state.page == "Prédiction":
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
         st.write(form_data)
-        input_data = pd.DataFrame([form_data])  # Convertir les entrées en DataFrame
-        predicted_price = ridge_model.predict(input_data)
+        
+        # Préparation des données d'entrée pour la prédiction
+        st.write("Vérification des données d'entrée avant prédiction :", input_data)
+        # Si le modèle s'attend à un tableau NumPy, convertissez input_data
+        input_data_np = input_data.values  # Convertir en tableau NumPy si nécessaire
+        predicted_price = ridge_model.predict(input_data_np)  # Utiliser input_data_np pour la prédiction
         st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
 
 
@@ -129,4 +133,4 @@ elif st.session_state.page == "Performance":
     #st.subheader("📈 Performance du Modèle Ridge")
     #st.write("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred))
     #st.write("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred))
-    st.write("Root Mean Squared Error (RMSE):", mean_squared_error(y_test, y_pred, squared=False))
+    #st.write("Root Mean Squared Error (RMSE):", mean_squared_error(y_test, y_pred, squared=False))
