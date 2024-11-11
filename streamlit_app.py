@@ -2,6 +2,14 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import joblib
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+@st.cache_resource
+def load_ridge_model():
+    return joblib.load('ridge_model.pkl')  # Chemin vers votre fichier modèle Ridge
+
+ridge_model = load_ridge_model()
 
 # Configuration de la page
 st.set_page_config(page_title="Application de gestion des prix immobiliers", layout="wide")
@@ -110,12 +118,17 @@ elif st.session_state.page == "Prédiction":
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
         st.write(form_data)
-        # Code pour la prédiction (exemple)
-        # predicted_price = model.predict(pd.DataFrame([form_data]))
-        # st.write(f"Le prix prédit est : {predicted_price}")
+        input_data = pd.DataFrame([form_data])  # Convertir les entrées en DataFrame
+        predicted_price = ridge_model.predict(input_data)
+        st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:,.2f}")
+
 
 # Section Performance
 elif st.session_state.page == "Performance":
     st.subheader("📈 Évaluation des Performances du Modèle")
     st.write("Examinez les performances des modèles utilisés pour la prédiction des prix.")
-    # Ajoutez ici le code pour afficher les métriques de performance du modèle
+    y_pred = ridge_model.predict(X_test)
+    st.subheader("📈 Performance du Modèle Ridge")
+    st.write("Mean Absolute Error (MAE):", mean_absolute_error(y_test, y_pred))
+    st.write("Mean Squared Error (MSE):", mean_squared_error(y_test, y_pred))
+    st.write("Root Mean Squared Error (RMSE):", mean_squared_error(y_test, y_pred, squared=False))
