@@ -122,7 +122,7 @@ elif st.session_state.page == "Prédiction":
 
     # Formulaire de saisie
     form_data = {}
-    if col != "SalePrice":  # Exclure la variable cible 'SalePrice'
+    for col in data.columns.drop("SalePrice":
         if data[col].dtype == 'object':
             # Champ de saisie de texte pour les variables catégorielles
             form_data[col] = st.selectbox(f"{col}", data[col].unique())
@@ -131,7 +131,7 @@ elif st.session_state.page == "Prédiction":
             min_val = data[col].min()
             max_val = data[col].max()
             form_data[col] = st.number_input(f"{col}", min_value=float(min_val), max_value=float(max_val), value=float(min_val))
-            
+
     # Bouton pour lancer la prédiction
     if st.button("Prédire le Prix"):
         st.write("Lancer la prédiction avec les valeurs suivantes :")
