@@ -122,7 +122,7 @@ elif st.session_state.page == "Prédiction":
 
     # Formulaire de saisie
     form_data = {}
-    for col in data.columns.drop("SalePrice":
+    for col in data.columns.drop("SalePrice"):
         if data[col].dtype == 'object':
             # Champ de saisie de texte pour les variables catégorielles
             form_data[col] = st.selectbox(f"{col}", data[col].unique())
