@@ -141,7 +141,7 @@ elif st.session_state.page == "Prédiction":
         # Prédiction
         try:
             input_data = pipeline.transform(input_data)
-            predicted_price = ridge_model.predict(input_data)
+            predicted_price = np.expm1(ridge_model.predict(input_data))
             st.write(f"Le prix prédit par le modèle Ridge est : {predicted_price[0]:}")
         except Exception as e:
             st.error(f"Erreur lors de la prédiction : {e}")
